@@ -32,7 +32,7 @@ var mapsheet = new Mapsheet(Assets.getBitmapData("img/your_spritesheet.png"));
 
 Quickly slice your spritesheet for equally sized ready to use frames:
 ```haxe
-// rows, columns
+// columns, rows
 mapsheet.slice(7, 8);
 ```
 
@@ -58,7 +58,7 @@ addChild( animated );
 
 Tell your animation what behavior to play
 ```haxe
-animated.showBehavior("stand");
+animated.showBehavior("idle");
 ```
 
 Finally, remember to update the animation and tell it how many time has passed since your last updated it.
@@ -69,5 +69,44 @@ private function onEnterFrame(e:Event):Void
  var delta = time - lastTime;
  animated.update(delta);
  lastTime = time;
+}
+```
+
+Sample
+```
+import openfl.Lib;
+import openfl.events.Event;
+import openfl.Assets;
+import openfl.display.Sprite;
+import mapsheet.Animation;
+import mapsheet.Mapsheet;
+import mapsheet.data.Behavior;
+
+class Cel extends Sprite{
+
+    var animated : Animation;
+    var lastTime : Int;
+
+    public function new() {
+        super();
+
+        var mapsheet = new Mapsheet(Assets.getBitmapData("assets/imagens/cel/prize1.png"));
+        mapsheet.slice(7, 1);
+        mapsheet.addBehavior( new Behavior("win", [0, 1, 2, 3, 4, 5, 6], true, 5) );
+
+        this.animated = new Animation(mapsheet);
+        addChild( animated );
+
+        animated.showBehavior("win");
+        this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+    }
+
+    private function onEnterFrame(e:Event):Void
+    {
+        var time = Lib.getTimer();
+        var delta = time - this.lastTime;
+        this.animated.update(delta);
+        this.lastTime = time;
+    }
 }
 ```
